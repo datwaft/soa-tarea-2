@@ -1,0 +1,14 @@
+# BUILD_DIR
+build/
+
+# Clangd cache
+.cache/
+
+# Personal LSP configuration
+compile_commands.json
+
+# Glade temporal files
+*~
+
+# MacOS cache
+.DS_Store
