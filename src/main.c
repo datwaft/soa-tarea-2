@@ -16,6 +16,10 @@ struct args {
   int id;
 };
 
+struct direction_args {
+  int num_threads;
+};
+
 void logger(const char *tag, const char *message) {
   // Obtain timestamp
   struct timeval tv;
@@ -46,7 +50,7 @@ void *thread(void *arg) {
   logger(((struct args *)arg)->direction, log_message);
 
   // critical section
-  sleep(2);
+  sleep(1);
 
   snprintf(log_message, sizeof(log_message), "%s%d%s", "car id ",
            ((struct args *)arg)->id, " exited bridge.");
@@ -60,7 +64,7 @@ void *thread(void *arg) {
 void *east_west_create(void *arg) {
   char direction[] = GREEN "east to west" RESET;
 
-  int num_threads = 2;
+  int num_threads = ((struct direction_args *)arg)->num_threads;
   pthread_t thread_id[num_threads];
 
   for (int i = 0; i < num_threads; i++) {
@@ -79,7 +83,7 @@ void *east_west_create(void *arg) {
 void *west_east_create(void *arg) {
   char direction[] = BLUE "west to east" RESET;
 
-  int num_threads = 5;
+  int num_threads = ((struct direction_args *)arg)->num_threads;
   pthread_t thread_id[num_threads];
 
   for (int i = 0; i < num_threads; i++) {
@@ -100,8 +104,16 @@ int main(int argc, char *argv[]) {
 
   pthread_t west_east, east_west;
 
-  pthread_create(&west_east, NULL, &west_east_create, NULL);
-  pthread_create(&east_west, NULL, &east_west_create, NULL);
+  struct direction_args *west_east_args =
+      (struct direction_args *)malloc(sizeof(struct direction_args));
+  west_east_args->num_threads = atoi(argv[1]);
+
+  struct direction_args *east_west_args =
+      (struct direction_args *)malloc(sizeof(struct direction_args));
+  east_west_args->num_threads = atoi(argv[2]);
+
+  pthread_create(&west_east, NULL, &west_east_create, (void *)west_east_args);
+  pthread_create(&east_west, NULL, &east_west_create, (void *)east_west_args);
 
   sem_destroy(&mutex);
 
