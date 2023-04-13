@@ -11,12 +11,12 @@
 
 sem_t mutex;
 
-struct args {
+struct thread_args_t {
   char *direction;
   int id;
 };
 
-struct direction_args {
+struct direction_args_t {
   int num_threads;
 };
 
@@ -46,15 +46,15 @@ void *thread(void *arg) {
 
   char log_message[256];
   snprintf(log_message, sizeof(log_message), "%s%d%s", "car id ",
-           ((struct args *)arg)->id, " entered bridge.");
-  logger(((struct args *)arg)->direction, log_message);
+           ((struct thread_args_t *)arg)->id, " entered bridge.");
+  logger(((struct thread_args_t *)arg)->direction, log_message);
 
   // critical section
   sleep(1);
 
   snprintf(log_message, sizeof(log_message), "%s%d%s", "car id ",
-           ((struct args *)arg)->id, " exited bridge.");
-  logger(((struct args *)arg)->direction, log_message);
+           ((struct thread_args_t *)arg)->id, " exited bridge.");
+  logger(((struct thread_args_t *)arg)->direction, log_message);
   sem_post(&mutex);
 
   // not sure
@@ -64,11 +64,11 @@ void *thread(void *arg) {
 void *east_west_create(void *arg) {
   char direction[] = GREEN "east to west" RESET;
 
-  int num_threads = ((struct direction_args *)arg)->num_threads;
+  int num_threads = ((struct direction_args_t *)arg)->num_threads;
   pthread_t thread_id[num_threads];
 
   for (int i = 0; i < num_threads; i++) {
-    struct args *thread_args = (struct args *)malloc(sizeof(struct args));
+    struct thread_args_t *thread_args = (struct thread_args_t *)malloc(sizeof(struct thread_args_t));
     thread_args->direction = direction;
     thread_args->id = i;
     pthread_create(&thread_id[i], NULL, &thread, (void *)thread_args);
@@ -83,11 +83,11 @@ void *east_west_create(void *arg) {
 void *west_east_create(void *arg) {
   char direction[] = BLUE "west to east" RESET;
 
-  int num_threads = ((struct direction_args *)arg)->num_threads;
+  int num_threads = ((struct direction_args_t *)arg)->num_threads;
   pthread_t thread_id[num_threads];
 
   for (int i = 0; i < num_threads; i++) {
-    struct args *thread_args = (struct args *)malloc(sizeof(struct args));
+    struct thread_args_t *thread_args = (struct thread_args_t *)malloc(sizeof(struct thread_args_t));
     thread_args->direction = direction;
     thread_args->id = i;
     pthread_create(&thread_id[i], NULL, &thread, (void *)thread_args);
@@ -104,12 +104,12 @@ int main(int argc, char *argv[]) {
 
   pthread_t west_east, east_west;
 
-  struct direction_args *west_east_args =
-      (struct direction_args *)malloc(sizeof(struct direction_args));
+  struct direction_args_t *west_east_args =
+      (struct direction_args_t *)malloc(sizeof(struct direction_args_t));
   west_east_args->num_threads = atoi(argv[1]);
 
-  struct direction_args *east_west_args =
-      (struct direction_args *)malloc(sizeof(struct direction_args));
+  struct direction_args_t *east_west_args =
+      (struct direction_args_t *)malloc(sizeof(struct direction_args_t));
   east_west_args->num_threads = atoi(argv[2]);
 
   pthread_create(&west_east, NULL, &west_east_create, (void *)west_east_args);
