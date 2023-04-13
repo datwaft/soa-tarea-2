@@ -14,6 +14,7 @@ sem_t mutex;
 struct thread_args_t {
   char *direction;
   int id;
+  int time_in_crit_section;
 };
 
 struct direction_args_t {
@@ -50,7 +51,13 @@ void *thread(void *arg) {
   logger(((struct thread_args_t *)arg)->direction, log_message);
 
   // critical section
-  sleep(1);
+  int time_in_crit_section =
+      ((struct thread_args_t *)arg)->time_in_crit_section;
+  snprintf(log_message, sizeof(log_message), "%s%d%s%d%s", "car id ",
+           ((struct thread_args_t *)arg)->id, " using bridge for ",
+           time_in_crit_section, " seconds.");
+  logger(((struct thread_args_t *)arg)->direction, log_message);
+  sleep(time_in_crit_section);
 
   snprintf(log_message, sizeof(log_message), "%s%d%s", "car id ",
            ((struct thread_args_t *)arg)->id, " exited bridge.");
@@ -68,9 +75,12 @@ void *east_west_create(void *arg) {
   pthread_t thread_id[num_threads];
 
   for (int i = 0; i < num_threads; i++) {
-    struct thread_args_t *thread_args = (struct thread_args_t *)malloc(sizeof(struct thread_args_t));
+    struct thread_args_t *thread_args =
+        (struct thread_args_t *)malloc(sizeof(struct thread_args_t));
     thread_args->direction = direction;
     thread_args->id = i;
+    thread_args->time_in_crit_section = 1; // if want to have different wait
+                                           // time
     pthread_create(&thread_id[i], NULL, &thread, (void *)thread_args);
     // delay exponencial de cada sentido
   }
@@ -87,9 +97,12 @@ void *west_east_create(void *arg) {
   pthread_t thread_id[num_threads];
 
   for (int i = 0; i < num_threads; i++) {
-    struct thread_args_t *thread_args = (struct thread_args_t *)malloc(sizeof(struct thread_args_t));
+    struct thread_args_t *thread_args =
+        (struct thread_args_t *)malloc(sizeof(struct thread_args_t));
     thread_args->direction = direction;
     thread_args->id = i;
+    thread_args->time_in_crit_section = 2; // if want to have different wait
+                                           // time
     pthread_create(&thread_id[i], NULL, &thread, (void *)thread_args);
     // delay exponencial
   }
