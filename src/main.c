@@ -41,7 +41,7 @@ void logger(const char *tag, const char *message) {
           timestamp, tag, message);
 }
 
-void *thread(void *arg) {
+void *crit_section_thread(void *arg) {
   // wait
   sem_wait(&mutex);
 
@@ -79,9 +79,10 @@ void *east_west_create(void *arg) {
         (struct thread_args_t *)malloc(sizeof(struct thread_args_t));
     thread_args->direction = direction;
     thread_args->id = i;
-    thread_args->time_in_crit_section = 1; // if want to have different wait
-                                           // time
-    pthread_create(&thread_id[i], NULL, &thread, (void *)thread_args);
+    thread_args->time_in_crit_section = 1; // (seconds) if want to have
+                                           // different wait time
+    pthread_create(&thread_id[i], NULL, &crit_section_thread,
+                   (void *)thread_args);
     // delay exponencial de cada sentido
   }
 
@@ -101,9 +102,10 @@ void *west_east_create(void *arg) {
         (struct thread_args_t *)malloc(sizeof(struct thread_args_t));
     thread_args->direction = direction;
     thread_args->id = i;
-    thread_args->time_in_crit_section = 2; // if want to have different wait
-                                           // time
-    pthread_create(&thread_id[i], NULL, &thread, (void *)thread_args);
+    thread_args->time_in_crit_section = 2; // (seconds) if want to have
+                                           // different wait time
+    pthread_create(&thread_id[i], NULL, &crit_section_thread,
+                   (void *)thread_args);
     // delay exponencial
   }
 
