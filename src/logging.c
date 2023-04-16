@@ -6,7 +6,7 @@
 #include <sys/time.h>
 #include <time.h>
 
-void print_with_timestamp(const char *message, ...) {
+void log_info(const char *message, ...) {
   struct timeval tv;
   gettimeofday(&tv, NULL);
   struct tm *tm = localtime(&tv.tv_sec);

@@ -17,37 +17,35 @@ typedef struct data_st {
 void thread_function(data_t *data) {
   semaphore_enter(data->semaphore, data->direction);
 
-  print_with_timestamp(
-      "\x1b[1;32m"
-      "%02d"
-      "\x1b[22;39m"
-      "("
-      "\x1b[1m"
-      "%s"
-      "\x1b[22m"
-      "): entered bridge"
-      "\x1b[0m"
-      "\n",
-      data->id, data->direction == DIRECTION_left ? "<-" : "->",
-      data->semaphore->counter,
-      data->semaphore->direction == DIRECTION_left ? "<-" : "->");
+  log_info("\x1b[1;32m"
+           "%02d"
+           "\x1b[22;39m"
+           "("
+           "\x1b[1m"
+           "%s"
+           "\x1b[22m"
+           "): entered bridge"
+           "\x1b[0m"
+           "\n",
+           data->id, data->direction == DIRECTION_left ? "<-" : "->",
+           data->semaphore->counter,
+           data->semaphore->direction == DIRECTION_left ? "<-" : "->");
 
   usleep(100 * 1000);
 
-  print_with_timestamp(
-      "\x1b[1;31m"
-      "%02d"
-      "\x1b[22;39m"
-      "("
-      "\x1b[1m"
-      "%s"
-      "\x1b[22m"
-      "): exited bridge"
-      "\x1b[0m"
-      "\n",
-      data->id, data->direction == DIRECTION_left ? "<-" : "->",
-      data->semaphore->counter,
-      data->semaphore->direction == DIRECTION_left ? "<-" : "->");
+  log_info("\x1b[1;31m"
+           "%02d"
+           "\x1b[22;39m"
+           "("
+           "\x1b[1m"
+           "%s"
+           "\x1b[22m"
+           "): exited bridge"
+           "\x1b[0m"
+           "\n",
+           data->id, data->direction == DIRECTION_left ? "<-" : "->",
+           data->semaphore->counter,
+           data->semaphore->direction == DIRECTION_left ? "<-" : "->");
 
   semaphore_exit(data->semaphore);
 }
