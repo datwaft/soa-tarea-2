@@ -14,6 +14,7 @@ typedef struct data_st {
 
 void thread_function(data_t *data) {
   semaphore_enter(data->semaphore, data->direction);
+
   print_with_timestamp(
       "\x1b[1;32m"
       "%02d"
@@ -28,8 +29,10 @@ void thread_function(data_t *data) {
       data->id, data->direction == DIRECTION_left ? "<-" : "->",
       data->semaphore->counter,
       data->semaphore->direction == DIRECTION_left ? "<-" : "->");
+
   nanosleep(&(struct timespec){.tv_nsec = 100 * 1000},
             &(struct timespec){.tv_nsec = 100 * 1000});
+
   print_with_timestamp(
       "\x1b[1;31m"
       "%02d"
@@ -44,6 +47,7 @@ void thread_function(data_t *data) {
       data->id, data->direction == DIRECTION_left ? "<-" : "->",
       data->semaphore->counter,
       data->semaphore->direction == DIRECTION_left ? "<-" : "->");
+
   semaphore_exit(data->semaphore);
 }
 
