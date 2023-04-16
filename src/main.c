@@ -27,9 +27,7 @@ void thread_function(data_t *data) {
            "): entered bridge"
            "\x1b[0m"
            "\n",
-           data->id, data->direction == DIRECTION_left ? "<-" : "->",
-           data->semaphore->counter,
-           data->semaphore->direction == DIRECTION_left ? "<-" : "->");
+           data->id, data->direction == DIRECTION_left ? "<-" : "->");
 
   usleep(100 * 1000);
 
@@ -43,9 +41,7 @@ void thread_function(data_t *data) {
            "): exited bridge"
            "\x1b[0m"
            "\n",
-           data->id, data->direction == DIRECTION_left ? "<-" : "->",
-           data->semaphore->counter,
-           data->semaphore->direction == DIRECTION_left ? "<-" : "->");
+           data->id, data->direction == DIRECTION_left ? "<-" : "->");
 
   semaphore_exit(data->semaphore);
 }
