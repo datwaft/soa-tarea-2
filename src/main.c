@@ -16,46 +16,51 @@ typedef struct data_st {
 
 void thread_function(data_t *data);
 
+typedef struct tc_data_st {
+  int64_t thread_n;
+  semaphore_t *semaphore;
+  direction_t direction;
+} tc_data_t;
+
+pthread_t *thread_creation_function(tc_data_t *data);
+
 int main(int argc, char **argv) {
-  int64_t left_n = 10;
+  int64_t left_n = 5;
   int64_t right_n = 10;
 
   semaphore_t *semaphore = malloc(sizeof(semaphore_t));
   semaphore_init(semaphore);
 
-  int64_t threads_size = left_n + right_n;
-  pthread_t threads[threads_size];
-  data_t data[threads_size];
+  pthread_t left_creation_thread;
+  pthread_create(&left_creation_thread, NULL,
+                 (void *(*)(void *))thread_creation_function,
+                 &(tc_data_t){.semaphore = semaphore,
+                              .direction = DIRECTION_left,
+                              .thread_n = left_n});
 
-  {
-    int64_t i = 0;
-    int64_t ii = 0;
-    while (i < threads_size) {
-      // Add left direction thread
-      data[i].id = i + 1;
-      data[i].semaphore = semaphore;
-      data[i].direction = DIRECTION_left;
-      pthread_create(&threads[i], NULL, (void *(*)(void *))thread_function,
-                     &data[i]);
-      i += 1;
-      // Add right direction thread
-      data[i].id = i + 1;
-      data[i].semaphore = semaphore;
-      data[i].direction = DIRECTION_right;
-      pthread_create(&threads[i], NULL, (void *(*)(void *))thread_function,
-                     &data[i]);
-      i += 1;
+  pthread_t right_creation_thread;
+  pthread_create(&right_creation_thread, NULL,
+                 (void *(*)(void *))thread_creation_function,
+                 &(tc_data_t){.semaphore = semaphore,
+                              .direction = DIRECTION_right,
+                              .thread_n = right_n});
 
-      int64_t sleep_us = powl(ii + 1, 2) * 10 * 1000;
-      usleep(sleep_us);
-      ii += 1;
-    }
+  pthread_t *left_threads = NULL;
+  pthread_join(left_creation_thread, (void **)&left_threads);
+
+  pthread_t *right_threads = NULL;
+  pthread_join(right_creation_thread, (void **)&right_threads);
+
+  for (int64_t i = 0; i < left_n; ++i) {
+    pthread_join(left_threads[i], NULL);
   }
 
-  for (int64_t i = 0; i < threads_size; ++i) {
-    pthread_join(threads[i], NULL);
+  for (int64_t i = 0; i < right_n; ++i) {
+    pthread_join(right_threads[i], NULL);
   }
 
+  free(left_threads);
+  free(right_threads);
   free(semaphore);
   return EXIT_SUCCESS;
 }
@@ -90,4 +95,28 @@ void thread_function(data_t *data) {
            data->id, data->direction == DIRECTION_left ? "<-" : "->");
 
   semaphore_exit(data->semaphore);
+
+  // NOTE: it is responsibility of the thread to free the memory for it's data
+  free(data);
+}
+
+pthread_t *thread_creation_function(tc_data_t *data) {
+  // NOTE: it is responsibility of the caller thread to free this memory.
+  pthread_t *threads = malloc(sizeof(pthread_t) * data->thread_n);
+
+  for (int64_t i = 0; i < data->thread_n; ++i) {
+    // NOTE: it is responsibility of the thread to free the memory for it's data
+    data_t *thread_data = malloc(sizeof(data_t));
+    thread_data->id = i + 1;
+    thread_data->semaphore = data->semaphore;
+    thread_data->direction = data->direction;
+
+    pthread_create(&threads[i], NULL, (void *(*)(void *))thread_function,
+                   thread_data);
+
+    int64_t sleep_us = powl(i + 1, 2) * 10 * 1000;
+    usleep(sleep_us);
+  }
+
+  pthread_exit(threads);
 }
