@@ -9,39 +9,7 @@
 #include <time.h>
 #include <unistd.h>
 
-typedef enum DIRECTION { DIRECTION_right, DIRECTION_left } direction_t;
-
-typedef struct semaphore_st {
-  pthread_mutex_t lock;
-  pthread_cond_t wait;
-  int64_t counter;
-  direction_t direction;
-} semaphore_t;
-
-void semaphore_init(semaphore_t *semaphore) {
-  semaphore->counter = 0;
-  pthread_cond_init(&semaphore->wait, NULL);
-  pthread_mutex_init(&semaphore->lock, NULL);
-}
-
-void semaphore_enter(semaphore_t *semaphore, direction_t direction) {
-  pthread_mutex_lock(&semaphore->lock);
-  while (semaphore->counter != 0 && semaphore->direction != direction) {
-    pthread_cond_wait(&semaphore->wait, &semaphore->lock);
-  }
-  semaphore->counter += 1;
-  semaphore->direction = direction;
-  pthread_mutex_unlock(&semaphore->lock);
-}
-
-void semaphore_exit(semaphore_t *semaphore) {
-  pthread_mutex_lock(&semaphore->lock);
-  semaphore->counter -= 1;
-  if (semaphore->counter == 0) {
-    pthread_cond_broadcast(&semaphore->wait);
-  }
-  pthread_mutex_unlock(&semaphore->lock);
-}
+#include "semaphore.h"
 
 static void print_with_timestamp(const char *message, ...);
 
