@@ -1,3 +1,4 @@
+#include <math.h>
 #include <pthread.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -62,17 +63,29 @@ int main(int argc, char **argv) {
   pthread_t threads[threads_size];
   data_t data[threads_size];
 
-  direction_t last = DIRECTION_left;
-  for (int64_t i = 0; i < threads_size; ++i) {
-    data[i].id = i + 1;
-    data[i].semaphore = semaphore;
-    data[i].direction = last;
-    last = last == DIRECTION_left ? DIRECTION_right : DIRECTION_left;
-  }
+  {
+    int64_t i = 0;
+    int64_t ii = 0;
+    while (i < threads_size) {
+      // Add left direction thread
+      data[i].id = i + 1;
+      data[i].semaphore = semaphore;
+      data[i].direction = DIRECTION_left;
+      pthread_create(&threads[i], NULL, (void *(*)(void *))thread_function,
+                     &data[i]);
+      i += 1;
+      // Add right direction thread
+      data[i].id = i + 1;
+      data[i].semaphore = semaphore;
+      data[i].direction = DIRECTION_right;
+      pthread_create(&threads[i], NULL, (void *(*)(void *))thread_function,
+                     &data[i]);
+      i += 1;
 
-  for (int64_t i = 0; i < threads_size; ++i) {
-    pthread_create(&threads[i], NULL, (void *(*)(void *))thread_function,
-                   &data[i]);
+      int64_t sleep_us = powl(ii + 1, 2) * 10 * 1000;
+      usleep(sleep_us);
+      ii += 1;
+    }
   }
 
   for (int64_t i = 0; i < threads_size; ++i) {
