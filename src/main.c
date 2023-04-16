@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <time.h>
+#include <unistd.h>
 
 #include "logging.h"
 #include "semaphore.h"
@@ -30,8 +31,7 @@ void thread_function(data_t *data) {
       data->semaphore->counter,
       data->semaphore->direction == DIRECTION_left ? "<-" : "->");
 
-  nanosleep(&(struct timespec){.tv_nsec = 100 * 1000},
-            &(struct timespec){.tv_nsec = 100 * 1000});
+  usleep(100 * 1000);
 
   print_with_timestamp(
       "\x1b[1;31m"
