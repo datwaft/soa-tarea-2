@@ -2,6 +2,7 @@
 #define SEMAPHORE_H
 
 #include <pthread.h>
+#include <stdint.h>
 
 typedef enum DIRECTION { DIRECTION_right, DIRECTION_left } direction_t;
 

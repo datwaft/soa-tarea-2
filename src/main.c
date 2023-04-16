@@ -1,17 +1,10 @@
 #include <pthread.h>
-#include <stdarg.h>
-#include <stddef.h>
 #include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <sys/time.h>
 #include <time.h>
-#include <unistd.h>
 
+#include "logging.h"
 #include "semaphore.h"
-
-static void print_with_timestamp(const char *message, ...);
 
 typedef struct data_st {
   int64_t id;
@@ -84,32 +77,4 @@ int main(int argc, char **argv) {
 
   free(semaphore);
   return EXIT_SUCCESS;
-}
-
-static void print_with_timestamp(const char *message, ...) {
-  struct timeval tv;
-  gettimeofday(&tv, NULL);
-  struct tm *tm = localtime(&tv.tv_sec);
-  char timestamp[128 + 15 + sizeof(message) + 1];
-  char milliseconds[15];
-  strftime(timestamp, sizeof(timestamp),
-           "\x1b[2m"
-           "[%H:%M:%S",
-           tm);
-  sprintf(milliseconds,
-          ".%06d] "
-          "\x1b[22m",
-          tv.tv_usec);
-  strcat(timestamp, milliseconds);
-  strcat(timestamp, message);
-
-  va_list args;
-  va_start(args, message);
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wformat-nonliteral"
-  vprintf(timestamp, args);
-#pragma clang diagnostic pop
-
-  va_end(args);
 }
