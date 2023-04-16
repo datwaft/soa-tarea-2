@@ -17,29 +17,29 @@ typedef struct data_st {
 void thread_function(data_t *data) {
   semaphore_enter(data->semaphore, data->direction);
 
-  log_info("\x1b[1;32m"
+  log_info("\x1b[1;32m" // bold intensity + green foreground color
            "%02d"
-           "\x1b[22;39m"
+           "\x1b[22;39m" // reset intensity + reset foreground color
            "("
-           "\x1b[1m"
+           "\x1b[1m" // bold intensity
            "%s"
-           "\x1b[22m"
+           "\x1b[22m" // reset intensity
            "): entered bridge"
-           "\x1b[0m"
+           "\x1b[0m" // reset
            "\n",
            data->id, data->direction == DIRECTION_left ? "<-" : "->");
 
   usleep(100 * 1000);
 
-  log_info("\x1b[1;31m"
+  log_info("\x1b[1;31m" // bold intensity + red foreground color
            "%02d"
-           "\x1b[22;39m"
+           "\x1b[22;39m" // reset intensity + reset foreground color
            "("
-           "\x1b[1m"
+           "\x1b[1m" // bold intensity
            "%s"
-           "\x1b[22m"
+           "\x1b[22m" // reset intensity
            "): exited bridge"
-           "\x1b[0m"
+           "\x1b[0m" // reset
            "\n",
            data->id, data->direction == DIRECTION_left ? "<-" : "->");
 

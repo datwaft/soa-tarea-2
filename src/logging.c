@@ -13,12 +13,12 @@ void log_info(const char *message, ...) {
   char timestamp[128 + 15 + sizeof(message) + 1];
   char milliseconds[15];
   strftime(timestamp, sizeof(timestamp),
-           "\x1b[2m"
+           "\x1b[2m" // dim intensity
            "[%H:%M:%S",
            tm);
   sprintf(milliseconds,
           ".%03d] "
-          "\x1b[22m",
+          "\x1b[22m", // reset intensity
           tv.tv_usec / 1000);
   strcat(timestamp, milliseconds);
   strcat(timestamp, message);
