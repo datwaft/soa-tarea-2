@@ -17,9 +17,9 @@ void print_with_timestamp(const char *message, ...) {
            "[%H:%M:%S",
            tm);
   sprintf(milliseconds,
-          ".%06d] "
+          ".%03d] "
           "\x1b[22m",
-          tv.tv_usec);
+          tv.tv_usec / 1000);
   strcat(timestamp, milliseconds);
   strcat(timestamp, message);
 
