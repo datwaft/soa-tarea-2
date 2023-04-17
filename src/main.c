@@ -73,6 +73,30 @@ int main(int argc, char **argv) {
            "\x1b[0m" // reset
            "\n",
            right_n);
+  log_info("\x1b[33m"
+           "The equation for cars coming from the "
+           "\x1b[1m"
+           "East"
+           "\x1b[22m"
+           " is "
+           "\x1b[3m"
+           "f(x) = x^2 * 10"
+           "\x1b[23m"
+           " (in ms)."
+           "\x1b[0m"
+           "\n");
+  log_info("\x1b[33m"
+           "The equation for cars coming from the "
+           "\x1b[1m"
+           "West"
+           "\x1b[22m"
+           " is "
+           "\x1b[3m"
+           "f(x) = x^2 * 10"
+           "\x1b[23m"
+           " (in ms)."
+           "\x1b[0m"
+           "\n");
 
   semaphore_t *semaphore = malloc(sizeof(semaphore_t));
   semaphore_init(semaphore);
