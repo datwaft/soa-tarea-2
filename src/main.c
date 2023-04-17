@@ -41,36 +41,36 @@ int main(int argc, char **argv) {
   int64_t left_n = atoi(argv[1]);
   int64_t right_n = atoi(argv[2]);
 
-  log_info("\x1b[33m"
-           "\x1b[1m"
+  log_info("\x1b[33m" // yellow foreground color
+           "\x1b[1m"  // bold intensity
            "%d"
-           "\x1b[22m"
+           "\x1b[22m" // reset intensity
            " cars are coming from the "
-           "\x1b[1m"
+           "\x1b[1m" // bold intensity
            "East"
-           "\x1b[22m"
+           "\x1b[22m" // reset intensity
            " ("
-           "\x1b[1m"
+           "\x1b[1m" // bold intensity
            "<-"
-           "\x1b[22m"
+           "\x1b[22m" // reset intensity
            ")."
-           "\x1b[0m"
+           "\x1b[0m" // reset
            "\n",
            left_n);
-  log_info("\x1b[33m"
-           "\x1b[1m"
+  log_info("\x1b[33m" // yellow foreground color
+           "\x1b[1m"  // bold intensity
            "%d"
-           "\x1b[22m"
+           "\x1b[22m" // reset intensity
            " cars are coming from the "
-           "\x1b[1m"
+           "\x1b[1m" // bold intensity
            "West"
-           "\x1b[22m"
+           "\x1b[22m" // reset intensity
            " ("
-           "\x1b[1m"
+           "\x1b[1m" // bold intensity
            "->"
-           "\x1b[22m"
+           "\x1b[22m" // reset intensity
            ")."
-           "\x1b[0m"
+           "\x1b[0m" // reset
            "\n",
            right_n);
 
@@ -121,10 +121,14 @@ void thread_function(data_t *data) {
            "\x1b[1m" // bold intensity
            "%s"
            "\x1b[22m" // reset intensity
-           "): entered bridge"
+           "): entered bridge, will stay in the bridge for "
+           "\x1b[1m" // bold intensity
+           "%d"
+           "\x1b[22m" // reset intensity
+           "ms"
            "\x1b[0m" // reset
            "\n",
-           data->id, data->direction == DIRECTION_left ? "<-" : "->");
+           data->id, data->direction == DIRECTION_left ? "<-" : "->", 100);
 
   usleep(100 * 1000);
 
