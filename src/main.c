@@ -27,13 +27,13 @@ pthread_t *thread_creation_function(tc_data_t *data);
 
 int main(int argc, char **argv) {
   if (argc < 3) {
-    fprintf(stderr, "\x1b[31m"
+    fprintf(stderr, "\x1b[31m" // red foreground color
                     "You must specify at least "
-                    "\x1b[1m"
+                    "\x1b[1m" // bold intensity
                     "2"
-                    "\x1b[22m"
+                    "\x1b[22m" // reset intensity
                     " arguments."
-                    "\x1b[0m"
+                    "\x1b[0m" // reset
                     "\n");
     return EXIT_FAILURE;
   }
