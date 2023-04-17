@@ -45,8 +45,8 @@ Todo el proyecto está funcionando correctamente según las especificaciones del
 
 ## Capturas de pantalla
 
-<img width="682" alt="image" src="https://user-images.githubusercontent.com/37723586/232627763-a10ff6cf-c2f1-4da4-89d2-f9e6fd7b5a7f.png">
+![](https://user-images.githubusercontent.com/37723586/232627763-a10ff6cf-c2f1-4da4-89d2-f9e6fd7b5a7f.png)
 
-<img width="682" alt="image" src="https://user-images.githubusercontent.com/37723586/232627883-29329543-63f1-4ed8-b85e-95314d308323.png">
+![](https://user-images.githubusercontent.com/37723586/232627883-29329543-63f1-4ed8-b85e-95314d308323.png)
 
-<img width="682" alt="image" src="https://user-images.githubusercontent.com/37723586/232627976-d98edff5-9fbc-4c18-a483-170244578844.png">
+![](https://user-images.githubusercontent.com/37723586/232627976-d98edff5-9fbc-4c18-a483-170244578844.png)
