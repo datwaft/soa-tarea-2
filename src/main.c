@@ -38,8 +38,8 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
 
-  int64_t left_n = atoi(argv[1]);
-  int64_t right_n = atoi(argv[2]);
+  int64_t right_n = atoi(argv[1]);
+  int64_t left_n = atoi(argv[2]);
 
   semaphore_t *semaphore = malloc(sizeof(semaphore_t));
   semaphore_init(semaphore);
