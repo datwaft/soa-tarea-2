@@ -179,6 +179,7 @@ pthread_t *thread_creation_function(tc_data_t *data) {
                data->direction == DIRECTION_left ? "East to West (<-)"
                                                  : "West to East (->)",
                sleep_us / 1000);
+      usleep(sleep_us);
     } else {
       log_info("\x1b[33m" // yellow foreground color
                "A new thread has been created with direction "
@@ -189,8 +190,6 @@ pthread_t *thread_creation_function(tc_data_t *data) {
                data->direction == DIRECTION_left ? "East to West (<-)"
                                                  : "West to East (->)");
     }
-
-    usleep(sleep_us);
   }
 
   pthread_exit(threads);
