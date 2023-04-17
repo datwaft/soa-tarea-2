@@ -1,6 +1,7 @@
 #include <math.h>
 #include <pthread.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
@@ -25,8 +26,20 @@ typedef struct tc_data_st {
 pthread_t *thread_creation_function(tc_data_t *data);
 
 int main(int argc, char **argv) {
-  int64_t left_n = 5;
-  int64_t right_n = 10;
+  if (argc < 3) {
+    fprintf(stderr, "\x1b[31m"
+                    "You must specify at least "
+                    "\x1b[1m"
+                    "2"
+                    "\x1b[22m"
+                    " arguments."
+                    "\x1b[0m"
+                    "\n");
+    return EXIT_FAILURE;
+  }
+
+  int64_t left_n = atoi(argv[1]);
+  int64_t right_n = atoi(argv[2]);
 
   semaphore_t *semaphore = malloc(sizeof(semaphore_t));
   semaphore_init(semaphore);
