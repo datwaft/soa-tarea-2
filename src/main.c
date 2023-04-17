@@ -38,8 +38,41 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
   }
 
-  int64_t right_n = atoi(argv[1]);
-  int64_t left_n = atoi(argv[2]);
+  int64_t left_n = atoi(argv[1]);
+  int64_t right_n = atoi(argv[2]);
+
+  log_info("\x1b[33m"
+           "\x1b[1m"
+           "%d"
+           "\x1b[22m"
+           " cars are coming from the "
+           "\x1b[1m"
+           "East"
+           "\x1b[22m"
+           " ("
+           "\x1b[1m"
+           "<-"
+           "\x1b[22m"
+           ")."
+           "\x1b[0m"
+           "\n",
+           left_n);
+  log_info("\x1b[33m"
+           "\x1b[1m"
+           "%d"
+           "\x1b[22m"
+           " cars are coming from the "
+           "\x1b[1m"
+           "West"
+           "\x1b[22m"
+           " ("
+           "\x1b[1m"
+           "->"
+           "\x1b[22m"
+           ")."
+           "\x1b[0m"
+           "\n",
+           right_n);
 
   semaphore_t *semaphore = malloc(sizeof(semaphore_t));
   semaphore_init(semaphore);
