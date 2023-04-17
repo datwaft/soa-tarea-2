@@ -6,6 +6,7 @@
 #include <time.h>
 #include <unistd.h>
 
+#include "exponential-distribution.h"
 #include "logging.h"
 #include "semaphore.h"
 
@@ -73,30 +74,6 @@ int main(int argc, char **argv) {
            "\x1b[0m" // reset
            "\n",
            right_n);
-  log_info("\x1b[33m"
-           "The equation for cars coming from the "
-           "\x1b[1m"
-           "East"
-           "\x1b[22m"
-           " is "
-           "\x1b[3m"
-           "f(x) = x^2 * 10"
-           "\x1b[23m"
-           " (in ms)."
-           "\x1b[0m"
-           "\n");
-  log_info("\x1b[33m"
-           "The equation for cars coming from the "
-           "\x1b[1m"
-           "West"
-           "\x1b[22m"
-           " is "
-           "\x1b[3m"
-           "f(x) = x^2 * 10"
-           "\x1b[23m"
-           " (in ms)."
-           "\x1b[0m"
-           "\n");
 
   semaphore_t *semaphore = malloc(sizeof(semaphore_t));
   semaphore_init(semaphore);
@@ -188,7 +165,7 @@ pthread_t *thread_creation_function(tc_data_t *data) {
     pthread_create(&threads[i], NULL, (void *(*)(void *))thread_function,
                    thread_data);
 
-    int64_t sleep_us = powl(i + 1, 2) * 10 * 1000;
+    int64_t sleep_us = exp_rand(0.005) * 1000;
 
     if (i < data->thread_n - 1) {
       log_info("\x1b[33m" // yellow foreground color
