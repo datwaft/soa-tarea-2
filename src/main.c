@@ -129,22 +129,33 @@ pthread_t *thread_creation_function(tc_data_t *data) {
 
     int64_t sleep_us = powl(i + 1, 2) * 10 * 1000;
 
-    log_info("\x1b[33m" // yellow foreground color
-             "A new thread has been created with direction "
-             "\x1b[1m" // bold intensity
-             "%s"
-             "\x1b[22m" // reset intensity
-             ", will wait "
-             "\x1b[1m" // bold intensity
-             "%d"
-             "\x1b[22m" // reset intensity
-             "ms "
-             "before creating a new thread."
-             "\x1b[0m" // reset
-             "\n",
-             data->direction == DIRECTION_left ? "East to West (<-)"
-                                               : "West to East (->)",
-             sleep_us / 1000);
+    if (i < data->thread_n - 1) {
+      log_info("\x1b[33m" // yellow foreground color
+               "A new thread has been created with direction "
+               "\x1b[1m" // bold intensity
+               "%s"
+               "\x1b[22m" // reset intensity
+               ", will wait "
+               "\x1b[1m" // bold intensity
+               "%d"
+               "\x1b[22m" // reset intensity
+               "ms "
+               "before creating a new thread."
+               "\x1b[0m" // reset
+               "\n",
+               data->direction == DIRECTION_left ? "East to West (<-)"
+                                                 : "West to East (->)",
+               sleep_us / 1000);
+    } else {
+      log_info("\x1b[33m" // yellow foreground color
+               "A new thread has been created with direction "
+               "\x1b[1m" // bold intensity
+               "%s"
+               "\x1b[0m" // reset
+               "\n",
+               data->direction == DIRECTION_left ? "East to West (<-)"
+                                                 : "West to East (->)");
+    }
 
     usleep(sleep_us);
   }
