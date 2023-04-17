@@ -22,6 +22,7 @@ typedef struct tc_data_st {
   int64_t thread_n;
   semaphore_t *semaphore;
   direction_t direction;
+  double lambda;
 } tc_data_t;
 
 pthread_t *thread_creation_function(tc_data_t *data);
@@ -54,7 +55,15 @@ int main(int argc, char **argv) {
            "\x1b[1m" // bold intensity
            "<-"
            "\x1b[22m" // reset intensity
-           ")."
+           "). Using "
+           "\x1b[1m" // bold intensity
+           "λ"
+           "\x1b[22m" // reset intensity
+           " of "
+           "\x1b[1m" // bold intensity
+           "0.005"
+           "\x1b[22m" // reset intensity
+           "."
            "\x1b[0m" // reset
            "\n",
            left_n);
@@ -70,7 +79,15 @@ int main(int argc, char **argv) {
            "\x1b[1m" // bold intensity
            "->"
            "\x1b[22m" // reset intensity
-           ")."
+           "). Using "
+           "\x1b[1m" // bold intensity
+           "λ"
+           "\x1b[22m" // reset intensity
+           " of "
+           "\x1b[1m" // bold intensity
+           "0.005"
+           "\x1b[22m" // reset intensity
+           "."
            "\x1b[0m" // reset
            "\n",
            right_n);
@@ -83,14 +100,16 @@ int main(int argc, char **argv) {
                  (void *(*)(void *))thread_creation_function,
                  &(tc_data_t){.semaphore = semaphore,
                               .direction = DIRECTION_left,
-                              .thread_n = left_n});
+                              .thread_n = left_n,
+                              .lambda = 0.005});
 
   pthread_t right_creation_thread;
   pthread_create(&right_creation_thread, NULL,
                  (void *(*)(void *))thread_creation_function,
                  &(tc_data_t){.semaphore = semaphore,
                               .direction = DIRECTION_right,
-                              .thread_n = right_n});
+                              .thread_n = right_n,
+                              .lambda = 0.005});
 
   pthread_t *left_threads = NULL;
   pthread_join(left_creation_thread, (void **)&left_threads);
@@ -165,7 +184,7 @@ pthread_t *thread_creation_function(tc_data_t *data) {
     pthread_create(&threads[i], NULL, (void *(*)(void *))thread_function,
                    thread_data);
 
-    int64_t sleep_us = exp_rand(0.005) * 1000;
+    int64_t sleep_us = exp_rand(data->lambda) * 1000;
 
     if (i < data->thread_n - 1) {
       log_info("\x1b[33m" // yellow foreground color
